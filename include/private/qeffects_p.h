@@ -1,0 +1,1 @@
+../../src/widgets/qeffects_p.h

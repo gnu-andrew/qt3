@@ -1,0 +1,27 @@
+/*
+*/
+/*!   \page life-example.html
+
+  \ingroup examples
+  \title Conway's Game of Life
+
+
+  <hr>
+
+  Header file:
+
+  \include life/life.h
+
+  <hr>
+
+  Implementation:
+
+  \include life/life.cpp
+
+  <hr>
+
+  Main:
+
+  \include life/main.cpp
+*/	
+

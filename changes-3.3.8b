@@ -1,0 +1,15 @@
+Qt 3.3.8b is a bug-fix release. It maintains both forward and backward
+compatibility (source and binary) with Qt 3.3.b, Qt 3.3.7, Qt 3.3.6,
+Qt 3.3.5, 3.3.4, Qt 3.3.3, Qt 3.3.2, Qt 3.3.1 and Qt 3.3.0.
+
+****************************************************************************
+*                           General                                        *
+****************************************************************************
+
+General Improvements
+--------------------
+
+- Legal
+
+    * This version adds the GNU Public License version 3 as a
+      possible choice for licenses to the Open Source releases of Qt 3.

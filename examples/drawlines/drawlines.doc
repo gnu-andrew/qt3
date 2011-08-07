@@ -1,0 +1,20 @@
+
+/*
+*/
+/*!   \page drawlines-example.html
+
+  \ingroup examples
+  \title Connect the Points
+
+  This example shows very simple mouse-based user interaction and
+  painting without any world transform matrix or other advanced
+  features.  Run the program, click the button, move the mouse,
+  release the button, and watch the lines get drawn.
+
+  <hr>
+
+  Implementation:
+
+  \include drawlines/connect.cpp
+*/
+

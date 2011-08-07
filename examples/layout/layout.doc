@@ -1,0 +1,17 @@
+/*
+*/
+/*!   \page layout-example.html
+
+  \ingroup examples
+  \title Layout Managers
+
+  This example shows simple and intermediate use of Qt's layout
+  classes, QGridLayout, QBoxLayout etc.
+
+  <hr>
+
+  Implementation:
+
+  \include layout/layout.cpp
+*/
+

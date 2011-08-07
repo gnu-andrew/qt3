@@ -1,0 +1,16 @@
+/*
+*/
+/*!   \page iconview-example.html
+
+  \ingroup examples
+  \title Iconview
+
+  This example implements a flexible icon view which can store
+  lots of icon items. It supports Drag&Drop, different selection modes,
+  view modes, rubberband selection, etc.
+
+  Main:
+
+  \include iconview/main.cpp
+*/
+

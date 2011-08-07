@@ -1,0 +1,29 @@
+/*
+*/
+/*!   \page dclock-example.html
+
+  \ingroup examples
+  \title Digital Clock
+
+  This example displays a digital LCD clock that can switch between time
+  and date.
+
+  <hr>
+
+  Header file:
+
+  \include dclock/dclock.h
+
+  <hr>
+
+  Implementation:
+
+  \include dclock/dclock.cpp
+
+  <hr>
+
+  Main:
+
+  \include dclock/main.cpp
+*/
+

@@ -1,0 +1,123 @@
+/****************************************************************************
+**
+** Windowsystem-specific pages
+**
+** Copyright (C) 2000-2008 Trolltech ASA.  All rights reserved.
+**
+** This file is part of the Qt GUI Toolkit.
+**
+** This file may be used under the terms of the GNU General
+** Public License versions 2.0 or 3.0 as published by the Free
+** Software Foundation and appearing in the files LICENSE.GPL2
+** and LICENSE.GPL3 included in the packaging of this file.
+** Alternatively you may (at your option) use any later version
+** of the GNU General Public License if such license has been
+** publicly approved by Trolltech ASA (or its successors, if any)
+** and the KDE Free Qt Foundation.
+**
+** Please review the following information to ensure GNU General
+** Public Licensing requirements will be met:
+** http://trolltech.com/products/qt/licenses/licensing/opensource/.
+** If you are unsure which license is appropriate for your use, please
+** review the following information:
+** http://trolltech.com/products/qt/licenses/licensing/licensingoverview
+** or contact the sales department at sales@trolltech.com.
+**
+** This file may be used under the terms of the Q Public License as
+** defined by Trolltech ASA and appearing in the file LICENSE.QPL
+** included in the packaging of this file.  Licensees holding valid Qt
+** Commercial licenses may use this file in accordance with the Qt
+** Commercial License Agreement provided with the Software.
+**
+** This file is provided "AS IS" with NO WARRANTY OF ANY KIND,
+** INCLUDING THE WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR
+** A PARTICULAR PURPOSE. Trolltech reserves all rights not granted
+** herein.
+**
+**********************************************************************/
+
+/*! \page winsystem.html
+
+\title Window System-specific Notes
+
+Qt is a multiplatform GUI toolkit, so almost the entire API is the
+same on all platforms and window systems. If you wish to use
+platform-specific features, and still maintain a platform-independent
+source tree, you should protect the platform-specific code using the
+appropriate \c{#ifdef} statements (see below).
+
+\tableofcontents
+
+For information about which platforms are supported by Qt, see the
+\link http://www.trolltech.com/products/platforms/ Platform
+Notes\endlink. For information on distributing Qt applications, see
+\link distributingqt.html Deploying Qt Applications\endlink.
+
+\target x11
+\section1 Qt/X11
+
+When compiling for this platform, the macro \c{Q_WS_X11} is defined.
+
+\e{Not documented here. Please contact Trolltech Technical Support
+if you have queries.}
+
+\img dependencies.png Qt/X11 Dependencies
+
+Note: You must compile with \e both Xft and XRender support to get
+alpha transparency support for pixmaps and images.  Configuring with
+XRender support only is not enough.
+
+\target win
+\section1 Qt/Windows
+
+When compiling for this platform, the macro \c{Q_WS_WIN} is defined.
+
+\e{Not documented here. Please contact Trolltech Technical Support
+if you have queries.}
+
+\section2 Microsoft Visual Studio 2005 Deployment Issues
+
+Executables compiled with Microsoft Visual Studio 2005 require
+a manifest file that points to the C and C++ runtime libraries that
+Qt and the application itself depend on. The manifest file is
+automatically generated for you, but it always needs to be located
+in the same directory as the application executable.
+
+It is important to remember to deploy the manifest file when
+deploying an application.
+
+<b>Note:</b>
+If you don't want to deploy your application with the .manifest file,
+you can embed the manifest in the executable as a resource with the
+\c mt command (distributed with Visual Studio 2005).
+
+If you have further problems, please see the MSDN document,
+"Side-by-side Assemblies Reference".
+
+\target macosx
+\section1 Qt/Mac OS X
+
+When compiling for this platform, the macro \c{Q_WS_MACX} is defined.
+
+\list
+ \i \link mac-differences.html Qt/Mac issues\endlink
+\endlist
+
+\target qws
+\section1 Qt/Embedded
+
+When compiling for this platform, the macro \c{Q_WS_QWS} is defined
+(the window system is literally the Qt Window System).
+
+\list
+ \i \link emb-install.html Installation\endlink
+ \i \link emb-performance.html Qt/Embedded performance tuning\endlink
+ \i \link emb-running.html Running Qt/Embedded applications\endlink
+ \i \link emb-porting.html Porting your applications to Qt/Embedded\endlink
+ \i \link emb-fonts.html Font formats and definitions\endlink
+ \i \link emb-charinput.html Character input (keyboard, pen, ...)\endlink
+ \i \link emb-pointer.html Pointer handling (mouse, pen, ...)\endlink
+ \i \link emb-features.html Reduce memory use with the feature definition file\endlink
+\endlist
+
+*/

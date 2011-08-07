@@ -1,0 +1,27 @@
+/*
+*/
+/*!   \page qwerty-example.html
+
+  \ingroup examples
+  \title Simple editor that can load encodings
+
+
+  <hr>
+
+  Header file:
+
+  \include qwerty/qwerty.h
+
+  <hr>
+
+  Implementation:
+
+  \include qwerty/qwerty.cpp
+
+  <hr>
+
+  Main:
+
+  \include qwerty/main.cpp
+*/	
+

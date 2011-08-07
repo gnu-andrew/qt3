@@ -1,0 +1,1 @@
+../../src/tools/qsettings_p.h

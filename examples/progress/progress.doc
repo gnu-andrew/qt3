@@ -1,0 +1,17 @@
+/*
+*/
+/*!   \page progress-example.html
+
+  \ingroup examples
+  \title Progress Bar and Dialog Example
+
+  This example displays either a simple (text-only) or a
+  custom-labelled (user-supplied widget) progress dialog.  It also
+  demonstrates simple use of menus.
+  <hr>
+
+  Implementation:
+
+  \include progress/progress.cpp
+*/
+

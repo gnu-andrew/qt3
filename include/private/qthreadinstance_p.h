@@ -1,0 +1,1 @@
+../../src/tools/qthreadinstance_p.h

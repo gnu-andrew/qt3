@@ -1,0 +1,1 @@
+../src/styles/qsgistyle.h

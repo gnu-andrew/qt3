@@ -1,0 +1,50 @@
+{
+  global:
+  extern "C++"
+  {
+	QGuardedPtrPrivate::*
+  };
+  local:
+  extern "C++"
+  {
+	QClipboardWatcher::*;
+	QColorLuminancePicker::*;
+	QErrorMessageTextView::*;
+	QETWidget::*;
+	QFDProgress*;
+	QFileDialogQFileListView::*;
+	QFtpDTP::*;
+	QFtpPI*;
+	QHttpNormalRequest::*;
+	QHttpRequest::*;
+	QHttpResponseHeader::*;
+	QMainWindowLayout::*;
+	Q*Private::*;    # collides with QGuardedPtrPrivate
+	QPSPrinter*;
+	Q*RegExpEngine::*;
+	Q*SvgDevice::*;
+	*QSvgDeviceState*;
+	ImgElement::*;
+	PixElement::*;
+	QRenameEdit::*;
+	QRollEffect::*;
+	QSharedDoubleBufferCleaner::*;
+	QSmSocketReceiver::*;
+	QSpinBoxValidator::*;
+	QSplitterHandle::*;
+	QSqlRecordShared::*;
+	QSVChildRec::*;
+	qt_xdnd_*;
+	QTipLabel::*;
+	QUnicodeTables::*;
+	QViewportWidget::*;
+	QWFlagWidget::*;
+	QWorkspaceChild::*;
+	QFontDef::*;
+	QFontStruct::*;
+	QFont*Codec::*;
+	QInputContext::*
+  };
+  TT_*;
+  TTO_*;
+};

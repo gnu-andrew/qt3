@@ -1,0 +1,25 @@
+/*
+*/
+/*!   \page menu-example.html
+
+  \ingroup examples
+  \title Using menus
+
+    This example demonstrates a menu bar with pull-down menus,
+    sub-menus and custom menu items. It also demonstrates a pop-up
+    context menu.
+
+
+  <hr>
+
+  Header file:
+
+  \include menu/menu.h
+
+  <hr>
+
+  Implementation:
+
+  \include menu/menu.cpp
+*/
+

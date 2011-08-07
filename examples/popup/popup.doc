@@ -1,0 +1,23 @@
+/*
+*/
+/*!   \page popup-example.html
+
+  \ingroup examples
+  \title Popup Widgets
+
+  This example shows how to implement widgets that should
+  pop up.
+
+  <hr>
+
+  Header file:
+
+  \include popup/popup.h
+
+  <hr>
+
+  Implementation:
+
+  \include popup/popup.cpp
+*/
+

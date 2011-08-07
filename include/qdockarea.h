@@ -1,0 +1,1 @@
+../src/widgets/qdockarea.h

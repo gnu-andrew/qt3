@@ -1,0 +1,17 @@
+/*
+*/
+/*!   \page xform-example.html
+
+  \ingroup examples
+  \title Transformed Graphics Demo
+
+  This example lets the user rotate, shear and scale text and graphics
+  arbitrarily.
+
+  <hr>
+
+  Implementation:
+
+  \include xform/xform.cpp
+*/
+

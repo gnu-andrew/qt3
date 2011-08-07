@@ -1,0 +1,1 @@
+../../src/tools/qgpluginmanager_p.h
