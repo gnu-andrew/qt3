@@ -248,6 +248,7 @@ private:
     void move( const QPoint & );
     void drop();
     void updatePixmap();
+    void updatePixmap( const QPoint& cursorPos );
 
 private:
     QDragObject * object;

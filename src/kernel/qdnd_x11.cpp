@@ -52,13 +52,15 @@
 #include "qdragobject.h"
 #include "qobjectlist.h"
 #include "qcursor.h"
+#include "qbitmap.h"
+#include "qpainter.h"
 
 #include "qt_x11_p.h"
 
 // conflict resolution
 
-// unused, may be used again later: const int XKeyPress = KeyPress;
-// unused, may be used again later: const int XKeyRelease = KeyRelease;
+const int XKeyPress = KeyPress;
+const int XKeyRelease = KeyRelease;
 #undef KeyPress
 #undef KeyRelease
 
@@ -256,20 +258,47 @@ class QShapedPixmapWidget : public QWidget {
 public:
     QShapedPixmapWidget(int screen = -1) :
 	QWidget(QApplication::desktop()->screen( screen ),
-		0, WStyle_Customize | WStyle_Tool | WStyle_NoBorder | WX11BypassWM )
+		0, WStyle_Customize | WStyle_Tool | WStyle_NoBorder | WX11BypassWM ), oldpmser( 0 ), oldbmser( 0 )
     {
     }
 
-    void setPixmap(QPixmap pm)
+    void setPixmap(QPixmap pm, QPoint hot)
     {
-	if ( pm.mask() ) {
+	int bmser = pm.mask() ? pm.mask()->serialNumber() : 0;
+	if( oldpmser == pm.serialNumber() && oldbmser == bmser
+	    && oldhot == hot )
+	    return;
+	oldpmser = pm.serialNumber();
+	oldbmser = bmser;
+	oldhot = hot;
+	bool hotspot_in = !(hot.x() < 0 || hot.y() < 0 || hot.x() >= pm.width() || hot.y() >= pm.height());
+// if the pixmap has hotspot in its area, make a "hole" in it at that position
+// this will allow XTranslateCoordinates() to find directly the window below the cursor instead
+// of finding this pixmap, and therefore there won't be needed any (slow) search for the window
+// using findRealWindow()
+	if( hotspot_in ) {
+	    QBitmap mask = pm.mask() ? *pm.mask() : QBitmap( pm.width(), pm.height());
+	    if( !pm.mask())
+		mask.fill( Qt::color1 );
+	    QPainter p( &mask );
+	    p.setPen( Qt::color0 );
+	    p.drawPoint( hot.x(), hot.y());
+	    p.end();
+    	    pm.setMask( mask );
+    	    setMask( mask );
+	} else if ( pm.mask() ) {
 	    setMask( *pm.mask() );
 	} else {
 	    clearMask();
 	}
 	resize(pm.width(),pm.height());
 	setErasePixmap(pm);
+	erase();
     }
+private:
+    int oldpmser;
+    int oldbmser;
+    QPoint oldhot;
 };
 
 static QShapedPixmapWidget * qt_xdnd_deco = 0;
@@ -875,6 +904,45 @@ void QDragManager::timerEvent( QTimerEvent* e )
 	move( QCursor::pos() );
 }
 
+static bool qt_xdnd_was_move = false;
+static bool qt_xdnd_found = false;
+// check whole incoming X queue for move events
+// checking whole queue is done by always returning False in the predicate
+// if there's another move event in the queue, and there's not a mouse button
+// or keyboard or ClientMessage event before it, the current move event
+// may be safely discarded
+// this helps avoiding being overloaded by being flooded from many events
+// from the XServer
+static
+Bool qt_xdnd_predicate( Display*, XEvent* ev, XPointer )
+{
+    if( qt_xdnd_found )
+	return False;
+    if( ev->type == MotionNotify )
+    {
+	qt_xdnd_was_move = true;
+	qt_xdnd_found = true;
+    }
+    if( ev->type == ButtonPress || ev->type == ButtonRelease
+	|| ev->type == XKeyPress || ev->type == XKeyRelease
+	|| ev->type == ClientMessage )
+    {
+	qt_xdnd_was_move = false;
+	qt_xdnd_found = true;
+    }
+    return False;
+}
+
+static
+bool qt_xdnd_another_movement()
+{
+    qt_xdnd_was_move = false;
+    qt_xdnd_found = false;
+    XEvent dummy;
+    XCheckIfEvent( qt_xdisplay(), &dummy, qt_xdnd_predicate, NULL );
+    return qt_xdnd_was_move;
+}
+
 bool QDragManager::eventFilter( QObject * o, QEvent * e)
 {
     if ( beingCancelled ) {
@@ -897,8 +965,10 @@ bool QDragManager::eventFilter( QObject * o, QEvent * e)
 
     if ( e->type() == QEvent::MouseMove ) {
 	QMouseEvent* me = (QMouseEvent *)e;
-	updateMode(me->stateAfter());
-	move( me->globalPos() );
+	if( !qt_xdnd_another_movement()) {
+	    updateMode(me->stateAfter());
+	    move( me->globalPos() );
+	}
 	return TRUE;
     } else if ( e->type() == QEvent::MouseButtonRelease ) {
 	qApp->removeEventFilter( this );
@@ -1139,7 +1209,7 @@ void QDragManager::move( const QPoint & globalPos )
 	    qt_xdnd_deco->grabMouse();
 	}
     }
-    updatePixmap();
+    updatePixmap( globalPos );
 
     if ( qt_xdnd_source_sameanswer.contains( globalPos ) &&
 	 qt_xdnd_source_sameanswer.isValid() ) {
@@ -1732,7 +1802,7 @@ bool QDragManager::drag( QDragObject * o, QDragObject::DragMode mode )
     // qt_xdnd_source_object persists until we get an xdnd_finish message
 }
 
-void QDragManager::updatePixmap()
+void QDragManager::updatePixmap( const QPoint& cursorPos )
 {
     if ( qt_xdnd_deco ) {
 	QPixmap pm;
@@ -1747,15 +1817,19 @@ void QDragManager::updatePixmap()
 		defaultPm = new QPixmap(default_pm);
 	    pm = *defaultPm;
 	}
-	qt_xdnd_deco->setPixmap(pm);
-	qt_xdnd_deco->move(QCursor::pos()-pm_hot);
-	qt_xdnd_deco->repaint(FALSE);
+	qt_xdnd_deco->setPixmap(pm, pm_hot);
+	qt_xdnd_deco->move(cursorPos-pm_hot);
 	    //if ( willDrop ) {
 	    qt_xdnd_deco->show();
 	    //} else {
 	    //    qt_xdnd_deco->hide();
 	    //}
     }
+}
+
+void QDragManager::updatePixmap()
+{
+    updatePixmap( QCursor::pos());
 }
 
 #endif // QT_NO_DRAGANDDROP
