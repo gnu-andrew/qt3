@@ -118,6 +118,8 @@ Atom qt_xdnd_finished;
 Atom qt_xdnd_type_list;
 const int qt_xdnd_version = 4;
 
+extern int qt_x11_translateButtonState( int s );
+
 // Actions
 //
 // The Xdnd spec allows for user-defined actions. This could be implemented
@@ -203,6 +205,8 @@ static Time qt_xdnd_target_current_time;
 static int qt_xdnd_current_screen = -1;
 // state of dragging... true if dragging, false if not
 bool qt_xdnd_dragging = FALSE;
+// need to check state of keyboard modifiers
+static bool need_modifiers_check = FALSE;
 
 // dict of payload data, sorted by type atom
 static QIntDict<QByteArray> * qt_xdnd_target_data = 0;
@@ -900,8 +904,20 @@ void qt_handle_xdnd_finished( QWidget *, const XEvent * xe, bool passive )
 
 void QDragManager::timerEvent( QTimerEvent* e )
 {
-    if ( e->timerId() == heartbeat && qt_xdnd_source_sameanswer.isNull() )
-	move( QCursor::pos() );
+    if ( e->timerId() == heartbeat ) {
+        if( need_modifiers_check ) {
+            Window root, child;
+            int root_x, root_y, win_x, win_y;
+            unsigned int mask;
+            XQueryPointer( qt_xdisplay(), qt_xrootwin( qt_xdnd_current_screen ),
+                &root, &child, &root_x, &root_y, &win_x, &win_y, &mask );
+            if( updateMode( (ButtonState)qt_x11_translateButtonState( mask )))
+                qt_xdnd_source_sameanswer = QRect(); // force move
+        }
+        need_modifiers_check = TRUE;
+        if( qt_xdnd_source_sameanswer.isNull() )
+	    move( QCursor::pos() );
+    }
 }
 
 static bool qt_xdnd_was_move = false;
@@ -969,6 +985,7 @@ bool QDragManager::eventFilter( QObject * o, QEvent * e)
 	    updateMode(me->stateAfter());
 	    move( me->globalPos() );
 	}
+        need_modifiers_check = FALSE;
 	return TRUE;
     } else if ( e->type() == QEvent::MouseButtonRelease ) {
 	qApp->removeEventFilter( this );
@@ -1007,9 +1024,11 @@ bool QDragManager::eventFilter( QObject * o, QEvent * e)
 	    beingCancelled = FALSE;
 	    qApp->exit_loop();
 	} else {
-	    updateMode(ke->stateAfter());
-	    qt_xdnd_source_sameanswer = QRect(); // force move
-	    move( QCursor::pos() );
+	    if( updateMode(ke->stateAfter())) {
+	        qt_xdnd_source_sameanswer = QRect(); // force move
+	        move( QCursor::pos() );
+            }
+            need_modifiers_check = FALSE;
 	}
 	return TRUE; // Eat all key events
     }
@@ -1036,10 +1055,10 @@ bool QDragManager::eventFilter( QObject * o, QEvent * e)
 
 
 static Qt::ButtonState oldstate;
-void QDragManager::updateMode( ButtonState newstate )
+bool QDragManager::updateMode( ButtonState newstate )
 {
     if ( newstate == oldstate )
-	return;
+	return false;
     const int both = ShiftButton|ControlButton;
     if ( (newstate & both) == both ) {
 	global_requested_action = QDropEvent::Link;
@@ -1063,6 +1082,7 @@ void QDragManager::updateMode( ButtonState newstate )
 	}
     }
     oldstate = newstate;
+    return true;
 }
 
 
@@ -1769,6 +1789,7 @@ bool QDragManager::drag( QDragObject * o, QDragObject::DragMode mode )
     qt_xdnd_source_sameanswer = QRect();
     move(QCursor::pos());
     heartbeat = startTimer(200);
+    need_modifiers_check = FALSE;
 
 #ifndef QT_NO_CURSOR
     qApp->setOverrideCursor( arrowCursor );

@@ -252,7 +252,7 @@ private:
 
 private:
     QDragObject * object;
-    void updateMode( ButtonState newstate );
+    bool updateMode( ButtonState newstate );
     void updateCursor();
 #if defined(Q_WS_X11)
     void createCursors();

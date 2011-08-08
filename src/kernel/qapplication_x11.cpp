@@ -3975,7 +3975,7 @@ void QApplication::closePopup( QWidget *popup )
 // Keyboard event translation
 //
 
-static int translateButtonState( int s )
+int qt_x11_translateButtonState( int s )
 {
     int bst = 0;
     if ( s & Button1Mask )
@@ -4041,7 +4041,7 @@ bool QETWidget::translateMouseEvent( const XEvent *event )
 	pos.ry() = lastMotion.y;
 	globalPos.rx() = lastMotion.x_root;
 	globalPos.ry() = lastMotion.y_root;
-	state = translateButtonState( lastMotion.state );
+	state = qt_x11_translateButtonState( lastMotion.state );
 	if ( qt_button_down && (state & (LeftButton |
 					 MidButton |
 					 RightButton ) ) == 0 )
@@ -4065,7 +4065,7 @@ bool QETWidget::translateMouseEvent( const XEvent *event )
 	pos.ry() = xevent->xcrossing.y;
 	globalPos.rx() = xevent->xcrossing.x_root;
 	globalPos.ry() = xevent->xcrossing.y_root;
-	state = translateButtonState( xevent->xcrossing.state );
+	state = qt_x11_translateButtonState( xevent->xcrossing.state );
 	if ( qt_button_down && (state & (LeftButton |
 					 MidButton |
 					 RightButton ) ) == 0 )
@@ -4077,7 +4077,7 @@ bool QETWidget::translateMouseEvent( const XEvent *event )
 	pos.ry() = event->xbutton.y;
 	globalPos.rx() = event->xbutton.x_root;
 	globalPos.ry() = event->xbutton.y_root;
-	state = translateButtonState( event->xbutton.state );
+	state = qt_x11_translateButtonState( event->xbutton.state );
 	switch ( event->xbutton.button ) {
 	case Button1: button = LeftButton; break;
 	case Button2: button = MidButton; break;
@@ -5023,7 +5023,7 @@ bool QETWidget::translateKeyEventInternal( const XEvent *event, int& count,
     XKeyEvent xkeyevent = event->xkey;
 
     // save the modifier state, we will use the keystate uint later by passing
-    // it to translateButtonState
+    // it to qt_x11_translateButtonState
     uint keystate = event->xkey.state;
     // remove the modifiers where mode_switch exists... HPUX machines seem
     // to have alt *AND* mode_switch both in Mod1Mask, which causes
@@ -5137,7 +5137,7 @@ bool QETWidget::translateKeyEventInternal( const XEvent *event, int& count,
     }
 #endif // !QT_NO_XIM
 
-    state = translateButtonState( keystate );
+    state = qt_x11_translateButtonState( keystate );
 
     static int directionKeyEvent = 0;
     if ( qt_use_rtl_extensions && type == QEvent::KeyRelease ) {
