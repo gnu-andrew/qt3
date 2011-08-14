@@ -893,6 +893,16 @@ bool QTextDrag::decode( const QMimeSource* e, QString& str, QCString& subtype )
 {
     if(!e)
 	return FALSE;
+        
+    // when subtype is not specified, try text/plain first, otherwise this may read
+    // things like text/x-moz-url even though better targets are available
+    if( subtype.isNull()) {
+        QCString subtmp = "plain";
+        if( decode( e, str, subtmp )) {
+            subtype = subtmp;
+            return true;
+        }
+    }
 
     if ( e->cacheType == QMimeSource::Text ) {
 	str = *e->cache.txt.str;
