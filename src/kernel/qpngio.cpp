@@ -162,7 +162,11 @@ void setup_qt( QImage& image, png_structp png_ptr, png_infop info_ptr, float scr
 		image.setColor( i, qRgba(c,c,c,0xff) );
 	    }
 	    if ( png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS) ) {
+#if PNG_LIBPNG_VER_MAJOR>1 || ( PNG_LIBPNG_VER_MAJOR==1 && PNG_LIBPNG_VER_MINOR>=4 )
+		const int g = info_ptr->trans_color.gray;
+#else
 		const int g = info_ptr->trans_values.gray;
+#endif
 		if (g < ncols) {
 		    image.setAlphaBuffer(TRUE);
 		    image.setColor(g, image.color(g) & RGB_MASK);
@@ -190,7 +194,11 @@ void setup_qt( QImage& image, png_structp png_ptr, png_infop info_ptr, float scr
 		    info_ptr->palette[i].red,
 		    info_ptr->palette[i].green,
 		    info_ptr->palette[i].blue,
+#if PNG_LIBPNG_VER_MAJOR>1 || ( PNG_LIBPNG_VER_MAJOR==1 && PNG_LIBPNG_VER_MINOR>=4 )
+		    info_ptr->trans_alpha[i]
+#else
 		    info_ptr->trans[i]
+#endif
 		    )
 		);
 		i++;
@@ -324,9 +332,15 @@ void read_png_image(QImageIO* iio)
 png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)
     if (image.depth()==32 && png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
 	QRgb trans = 0xFF000000 | qRgb(
+#if PNG_LIBPNG_VER_MAJOR>1 || ( PNG_LIBPNG_VER_MAJOR==1 && PNG_LIBPNG_VER_MINOR>=4 )
+	      (info_ptr->trans_color.red << 8 >> bit_depth)&0xff,
+	      (info_ptr->trans_color.green << 8 >> bit_depth)&0xff,
+	      (info_ptr->trans_color.blue << 8 >> bit_depth)&0xff);
+#else
 	      (info_ptr->trans_values.red << 8 >> bit_depth)&0xff,
 	      (info_ptr->trans_values.green << 8 >> bit_depth)&0xff,
 	      (info_ptr->trans_values.blue << 8 >> bit_depth)&0xff);
+#endif
 	for (uint y=0; y<height; y++) {
 	    for (uint x=0; x<info_ptr->width; x++) {
 		if (((uint**)jt)[y][x] == trans) {
