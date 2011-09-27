@@ -274,6 +274,7 @@ Atom		qt_net_wm_frame_strut		= 0;	// KDE extension
 Atom		qt_net_wm_state_stays_on_top	= 0;	// KDE extension
 Atom		qt_net_wm_pid		= 0;
 Atom		qt_net_wm_user_time	= 0;
+Atom            qt_net_wm_full_placement = 0; // KDE extension
 // Enlightenment support
 Atom		qt_enlightenment_desktop	= 0;
 
@@ -1925,6 +1926,7 @@ void qt_init_internal( int *argcptr, char **argv,
 			    &qt_net_wm_state_stays_on_top );
 	qt_x11_intern_atom( "_NET_WM_PID", &qt_net_wm_pid );
 	qt_x11_intern_atom( "_NET_WM_USER_TIME", &qt_net_wm_user_time );
+	qt_x11_intern_atom( "_NET_WM_FULL_PLACEMENT", &qt_net_wm_full_placement );
 	qt_x11_intern_atom( "ENLIGHTENMENT_DESKTOP", &qt_enlightenment_desktop );
 	qt_x11_intern_atom( "_NET_WM_NAME", &qt_net_wm_name );
 	qt_x11_intern_atom( "_NET_WM_ICON_NAME", &qt_net_wm_icon_name );

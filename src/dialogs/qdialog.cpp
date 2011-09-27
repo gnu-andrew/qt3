@@ -673,6 +673,11 @@ bool QDialog::event( QEvent *e )
 
 #if defined(Q_WS_X11)
 extern "C" { int XSetTransientForHint( Display *, unsigned long, unsigned long ); }
+#include <private/qt_x11_p.h>
+#undef FocusIn
+// defined in qapplication_x11.cpp
+extern Atom qt_net_wm_full_placement;
+extern bool qt_net_supports(Atom atom);
 #endif // Q_WS_X11
 
 /*!
@@ -694,10 +699,12 @@ void QDialog::show()
 
     if ( !did_resize )
 	adjustSize();
-    if ( has_relpos && !did_move ) {
-	adjustPositionInternal( parentWidget(), TRUE );
-    } else if ( !did_move ) {
-	adjustPositionInternal( parentWidget() );
+    if( !qt_net_supports( qt_net_wm_full_placement )) {
+	if ( has_relpos && !did_move ) {
+	    adjustPositionInternal( parentWidget(), TRUE );
+	} else if ( !did_move ) {
+	    adjustPositionInternal( parentWidget() );
+	}
     }
 
     if (windowState() != state)
