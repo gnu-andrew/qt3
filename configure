@@ -3082,15 +3082,15 @@ case "$COMPILER" in
 g++*)
     # GNU C++
     QMAKE_CONF_COMPILER=`grep "QMAKE_CXX[^_A-Z0-9a-z]" $QMAKESPEC/qmake.conf | sed "s,.* *= *\(.*\)$,\1,"`
-    COMPILER_VERSION=`${QMAKE_CONF_COMPILER} --version 2>/dev/null`
+    COMPILER_VERSION=`${QMAKE_CONF_COMPILER} -dumpversion 2>/dev/null`
     case "$COMPILER_VERSION" in
-    *2.95.*)
+    2.95.*)
 	COMPILER_VERSION="2.95.*"
 	;;
-    *3.*)
+    3.*)
 	COMPILER_VERSION="3.*"
 	;;
-    *4.*)
+    4.*)
 	COMPILER_VERSION="4"
 	;;
     *)
