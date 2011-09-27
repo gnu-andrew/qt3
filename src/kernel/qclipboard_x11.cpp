@@ -112,6 +112,7 @@ static int pending_timer_id = 0;
 static bool pending_clipboard_changed = FALSE;
 static bool pending_selection_changed = FALSE;
 
+Q_EXPORT bool qt_qclipboard_bailout_hack = false;
 
 // event capture mechanism for qt_xclb_wait_for_event
 static bool waiting_for_data = FALSE;
@@ -464,6 +465,15 @@ static Bool checkForClipboardEvents(Display *, XEvent *e, XPointer)
                                               || e->xselectionclear.selection == qt_xa_clipboard)));
 }
 
+static bool selection_request_pending = false;
+
+static Bool check_selection_request_pending( Display*, XEvent* e, XPointer )
+    {
+    if( e->type == SelectionRequest && e->xselectionrequest.owner == owner->winId())
+        selection_request_pending = true;
+    return False;
+    }
+
 bool qt_xclb_wait_for_event( Display *dpy, Window win, int type, XEvent *event,
 			     int timeout )
 {
@@ -515,6 +525,14 @@ bool qt_xclb_wait_for_event( Display *dpy, Window win, int type, XEvent *event,
     do {
         if ( XCheckTypedWindowEvent(dpy,win,type,event) )
 	    return TRUE;
+        if( qt_qclipboard_bailout_hack ) {
+            XEvent dummy;
+            selection_request_pending = false;
+            if ( owner != NULL )
+                XCheckIfEvent(dpy,&dummy,check_selection_request_pending,NULL);
+            if( selection_request_pending )
+	        return TRUE;
+        }
 
         // process other clipboard events, since someone is probably requesting data from us
         XEvent e;
