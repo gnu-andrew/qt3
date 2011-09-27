@@ -120,13 +120,13 @@ static QPluginManager<WidgetInterface> *widgetInterfaceManager = 0;
 static QMap<QString, bool> *availableWidgetMap = 0;
 static QStringList *availableWidgetList = 0;
 
-QMap<QWidget*, QString> *qwf_forms = 0;
+Q_EXPORT QMap<QWidget*, QString> *qwf_forms = 0;
 QString *qwf_language = 0;
-bool qwf_execute_code = TRUE;
+Q_EXPORT bool qwf_execute_code = TRUE;
 bool qwf_stays_on_top = FALSE;
 QString qwf_currFileName = "";
 QObject *qwf_form_object = 0;
-QString *qwf_plugin_dir = 0;
+Q_EXPORT QString *qwf_plugin_dir = 0;
 
 static void setupPluginDir()
 {

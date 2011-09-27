@@ -318,7 +318,7 @@ static long qt_mode_switch_remove_mask = 0;
 
 // flags for extensions for special Languages, currently only for RTL languages
 static bool 	qt_use_rtl_extensions = FALSE;
-bool qt_hebrew_keyboard_hack = FALSE;
+Q_EXPORT bool qt_hebrew_keyboard_hack = FALSE;
 
 static Window	mouseActWindow	     = 0;	// window where mouse is
 static int	mouseButtonPressed   = 0;	// last mouse button pressed
@@ -3805,7 +3805,7 @@ void qt_leave_modal( QWidget *widget )
 }
 
 
-bool qt_try_modal( QWidget *widget, XEvent *event )
+Q_EXPORT bool qt_try_modal( QWidget *widget, XEvent *event )
 {
     if (qt_xdnd_dragging) {
 	// allow mouse events while DnD is active

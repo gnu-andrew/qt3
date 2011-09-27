@@ -885,6 +885,10 @@ class QDataStream;
 #    define Q_TEMPLATE_EXTERN
 #    undef  Q_DISABLE_COPY 	/* avoid unresolved externals */
 #  endif
+#elif defined(Q_CC_GNU) && __GNUC__ - 0 >= 4
+#    define Q_EXPORT __attribute__((visibility("default")))
+#    undef QT_MAKEDLL		/* ignore these for other platforms */
+#    undef QT_DLL
 #else
 #  undef QT_MAKEDLL		/* ignore these for other platforms */
 #  undef QT_DLL

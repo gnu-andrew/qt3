@@ -40,7 +40,7 @@
 class QDomElement;
 class QDomDocument;
 
-class DomTool : public Qt
+class Q_EXPORT DomTool : public Qt
 {
 public:
     static QVariant readProperty( const QDomElement& e, const QString& name, const QVariant& defValue );

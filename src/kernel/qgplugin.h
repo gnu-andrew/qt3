@@ -93,35 +93,19 @@
 	    return i->iface(); \
 	}
 
-#    ifdef Q_WS_WIN
-#	ifdef Q_CC_BOR
-#	    define Q_EXPORT_PLUGIN(PLUGIN) \
-	        Q_PLUGIN_VERIFICATION_DATA \
-		Q_EXTERN_C __declspec(dllexport) \
-                const char * __stdcall qt_ucm_query_verification_data() \
-                { return qt_ucm_verification_data; } \
-		Q_EXTERN_C __declspec(dllexport) QUnknownInterface* \
-                __stdcall ucm_instantiate() \
-		Q_PLUGIN_INSTANTIATE( PLUGIN )
-#	else
-#	    define Q_EXPORT_PLUGIN(PLUGIN) \
-	        Q_PLUGIN_VERIFICATION_DATA \
-		Q_EXTERN_C __declspec(dllexport) \
-                const char *qt_ucm_query_verification_data() \
-                { return qt_ucm_verification_data; } \
-		Q_EXTERN_C __declspec(dllexport) QUnknownInterface* ucm_instantiate() \
-		Q_PLUGIN_INSTANTIATE( PLUGIN )
-#	endif
-#    else
-#	define Q_EXPORT_PLUGIN(PLUGIN) \
-	    Q_PLUGIN_VERIFICATION_DATA \
-	    Q_EXTERN_C \
-            const char *qt_ucm_query_verification_data() \
-            { return qt_ucm_verification_data; } \
-	    Q_EXTERN_C QUnknownInterface* ucm_instantiate() \
-            Q_PLUGIN_INSTANTIATE( PLUGIN )
-#    endif
+#if defined(Q_WS_WIN) && defined(Q_CC_BOR)
+#   define Q_STDCALL __stdcall
+#else
+#   define Q_STDCALL
+#endif
 
+#define Q_EXPORT_PLUGIN(PLUGIN) \
+	    Q_PLUGIN_VERIFICATION_DATA \
+	    Q_EXTERN_C Q_EXPORT \
+            const char * Q_STDCALL qt_ucm_query_verification_data() \
+            { return qt_ucm_verification_data; } \
+	    Q_EXTERN_C Q_EXPORT QUnknownInterface* Q_STDCALL ucm_instantiate() \
+            Q_PLUGIN_INSTANTIATE( PLUGIN )
 #endif
 
 struct QUnknownInterface;

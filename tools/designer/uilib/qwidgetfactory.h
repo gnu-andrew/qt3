@@ -55,7 +55,7 @@ class QWidget;
 class QWidgetFactoryPrivate;
 class UibStrTable;
 
-class QWidgetFactory
+class Q_EXPORT QWidgetFactory
 {
 public:
     QWidgetFactory();

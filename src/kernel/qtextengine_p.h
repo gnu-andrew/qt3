@@ -292,7 +292,7 @@ private:
 
 class QFontPrivate;
 
-class QTextEngine {
+class Q_EXPORT QTextEngine {
 public:
     QTextEngine( const QString &str, QFontPrivate *f );
     ~QTextEngine();
