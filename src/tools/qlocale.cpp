@@ -58,6 +58,10 @@
 #   undef INFINITY
 #endif
 
+#if defined(Q_OS_LINUX) && defined(__UCLIBC__)
+#   undef Q_OS_LINUX
+#endif
+
 #ifdef Q_OS_LINUX
 #    include <fenv.h>
 #endif
