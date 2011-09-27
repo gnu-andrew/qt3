@@ -963,18 +963,16 @@ QFontDatabase::findFont( QFont::Script script, const QFontPrivate *fp,
 #ifdef Q_WS_X11
     if (script == QFont::Han) {
 	// modify script according to locale
-	static QFont::Script defaultHan = QFont::UnknownScript;
-	if (defaultHan == QFont::UnknownScript) {
-	    QCString locale = setlocale(LC_ALL, NULL);
-	    if (locale.contains("ko"))
-		defaultHan = QFont::Han_Korean;
-	    else if (locale.contains("zh_TW") || locale.contains("zh_HK"))
-		defaultHan = QFont::Han_TraditionalChinese;
-	    else if (locale.contains("zh"))
-		defaultHan = QFont::Han_SimplifiedChinese;
-	    else
-		defaultHan = QFont::Han_Japanese;
-	}
+	static QFont::Script defaultHan = QFont::Han;
+	QCString locale = setlocale(LC_ALL, NULL);
+	if (locale.contains("ko"))
+	    defaultHan = QFont::Han_Korean;
+	else if (locale.contains("zh_TW") || locale.contains("zh_HK"))
+	    defaultHan = QFont::Han_TraditionalChinese;
+	else if (locale.contains("zh"))
+	    defaultHan = QFont::Han_SimplifiedChinese;
+	else if (locale.contains("jp"))
+	    defaultHan = QFont::Han_Japanese;
 	script = defaultHan;
     }
 #endif
