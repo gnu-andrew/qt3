@@ -2533,7 +2533,7 @@ QSize QPopupMenu::sizeHint() const
     constPolish();
     QPopupMenu* that = (QPopupMenu*) this;
     //We do not need a resize here, just the sizeHint..
-    return that->updateSize(FALSE, FALSE).expandedTo( QApplication::globalStrut() );
+    return that->updateSize(FALSE).expandedTo( QApplication::globalStrut() );
 }
 
 
