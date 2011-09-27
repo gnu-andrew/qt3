@@ -128,7 +128,7 @@ void setup_qt( QImage& image, png_structp png_ptr, png_infop info_ptr, float scr
 
     if ( color_type == PNG_COLOR_TYPE_GRAY ) {
 	// Black & White or 8-bit grayscale
-	if ( bit_depth == 1 && info_ptr->channels == 1 ) {
+      if ( bit_depth == 1 && png_get_channels (png_ptr, info_ptr)  == 1 ) {
 	    png_set_invert_mono( png_ptr );
 	    png_read_update_info( png_ptr, info_ptr );
 	    if (!image.create( width, height, 1, 2, QImage::BigEndian ))
@@ -162,14 +162,18 @@ void setup_qt( QImage& image, png_structp png_ptr, png_infop info_ptr, float scr
 		image.setColor( i, qRgba(c,c,c,0xff) );
 	    }
 	    if ( png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS) ) {
-#if PNG_LIBPNG_VER_MAJOR>1 || ( PNG_LIBPNG_VER_MAJOR==1 && PNG_LIBPNG_VER_MINOR>=4 )
-		const int g = info_ptr->trans_color.gray;
-#else
-		const int g = info_ptr->trans_values.gray;
-#endif
-		if (g < ncols) {
+	        png_bytep trans_alpha;
+		int num_trans;
+		png_color_16p trans_color;
+
+		if ( png_get_tRNS (png_ptr, info_ptr, &trans_alpha,
+				   &num_trans, &trans_color) ) {
+		  
+		  const int g = trans_color.gray;
+		  if (g < ncols) {
 		    image.setAlphaBuffer(TRUE);
 		    image.setColor(g, image.color(g) & RGB_MASK);
+		  }
 		}
 	    }
 	}
@@ -1047,7 +1051,7 @@ int QPNGFormat::decode(QImage& img, QImageConsumer* cons,
 	    return -1;
 	}
 
-	if (setjmp((png_ptr)->jmpbuf)) {
+	if (setjmp(png_jmpbuf(png_ptr)) {
 	    png_destroy_read_struct(&png_ptr, &info_ptr, 0);
 	    image = 0;
 	    return -1;
