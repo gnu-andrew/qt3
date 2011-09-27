@@ -1553,6 +1553,9 @@ bool QScrollView::eventFilter( QObject *obj, QEvent *e )
         case QEvent::LayoutHint:
             d->autoResizeHint(this);
             break;
+        case QEvent::WindowActivate:
+        case QEvent::WindowDeactivate:
+            return TRUE;
         default:
             break;
         }
