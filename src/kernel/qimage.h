@@ -58,7 +58,7 @@ public:
     QCString lang;
 
     bool operator< (const QImageTextKeyLang& other) const
-	{ return key < other.key || key==other.key && lang < other.lang; }
+        { return key < other.key || ( key==other.key && lang < other.lang ); }
     bool operator== (const QImageTextKeyLang& other) const
 	{ return key==other.key && lang==other.lang; }
 };

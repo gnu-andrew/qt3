@@ -610,7 +610,7 @@ void qt_handle_xdnd_position( QWidget *w, const XEvent * xe, bool passive )
     if (!passive && checkEmbedded(c, xe))
 	return;
 
-    if ( !c || !c->acceptDrops() && c->isDesktop() ) {
+    if ( !c || ( !c->acceptDrops() && c->isDesktop() ) ) {
 	return;
     }
 

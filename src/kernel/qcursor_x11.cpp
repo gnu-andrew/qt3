@@ -704,7 +704,7 @@ void QCursor::update() const
 	forbidden_bits, forbiddenm_bits
     };
 
-    if ( d->cshape >= SizeVerCursor && d->cshape < SizeAllCursor ||
+    if ( ( d->cshape >= SizeVerCursor && d->cshape < SizeAllCursor ) ||
 	 d->cshape == BlankCursor ) {
 	XColor bg, fg;
 	bg.red   = 255 << 8;
